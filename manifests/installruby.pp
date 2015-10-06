@@ -5,14 +5,16 @@ define rvm::installruby(
   $homeuser = "/home/$user",
 ){
 
-  exec{ "rvm-requirements":
+  exec{ "rvm-requirements-$user-$rubyversion":
+    path    => [ "/usr/bin", "/usr/sbin", "/bin", "/sbin" ],
     command => "$homeuser/.rvm/bin/rvm requirements",
-    unless  => "$homeuser/.rvm/bin/rvm list |grep $rubyversion",
-    require => [ Class["rvm::rubyreq"], Exec["installrvm-$user"] ],
+    unless  => "$homeuser/.rvm/bin/rvm list | grep $rubyversion",
+    require => [ User["$user"], Class["rvm::rubyreq"], Exec["installrvm-$user"] ],
     timeout => 0,
   }->
 
   exec{ "installrubies-$user-$rubyversion":
+    path    => [ "/usr/bin", "/usr/sbin", "/bin", "/sbin" ],
     command => "/bin/bash --login -c 'HOME=$homeuser && rvm install $rubyversion'",
     unless => "/bin/bash --login -c 'rvm list |grep $rubyversion'",
     user => "$user",
@@ -25,6 +27,7 @@ define rvm::installruby(
   #source "$HOME/.rvm/scripts/rvm"
   if $makedefault {
     exec{ "makedefaultruby-$user-$rubyversion":
+      path    => [ "/usr/bin", "/usr/sbin", "/bin", "/sbin" ],
       #command => "$homeuser/.rvm/bin/rvm alias create default $rubyversion",
       command => "/bin/bash --login -c 'HOME=$homeuser && rvm alias create default $rubyversion'",
       unless => "/bin/bash --login -c 'HOME=$homeuser && rvm alias list |grep $rubyversion'",
@@ -32,6 +35,7 @@ define rvm::installruby(
       #path => "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
       environment => ["HOME=$homeuser"],
       require => Class["rvm::rubyreq"],
+      logoutput => true,
       ;
     }
   }
