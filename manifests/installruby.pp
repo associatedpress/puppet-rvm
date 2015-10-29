@@ -2,6 +2,7 @@ define rvm::installruby(
   $makedefault = false,
   $user,
   $rubyversion,
+  $extraflags = undef,  
   $homeuser = "/home/$user",
 ){
 
@@ -15,7 +16,7 @@ define rvm::installruby(
 
   exec{ "installrubies-$user-$rubyversion":
     path    => [ "/usr/bin", "/usr/sbin", "/bin", "/sbin" ],
-    command => "/bin/bash --login -c 'HOME=$homeuser && rvm install $rubyversion'",
+    command => "/bin/bash --login -c 'HOME=$homeuser && rvm install $rubyversion $extraflags'",
     unless => "/bin/bash --login -c 'rvm list |grep $rubyversion'",
     user => "$user",
     environment => ["HOME=$homeuser"],
