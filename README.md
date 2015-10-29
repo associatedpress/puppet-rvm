@@ -35,7 +35,7 @@ rvm::installruby{"install-ruby-to-jhondoe":
   user => 'jhondoe', #required
   rubyversion => "2.0.0-head", #required
   makedefault => true, #defaults to false
-  homeuser = "/home/jhondoe", # Optional, defaults to /home/$user
+  homeuser => "/home/jhondoe", # Optional, defaults to /home/$user
   extraflags => "--verify-downloads 1", #Optional, defaults to undef
 }
 ```
@@ -46,7 +46,7 @@ Create a new gemset called gemsetname
 rvm::creategemset{"gemsetname":
   user => "jhondoe", # user param is required
   rubyversion => "2.0.0", # Ruby version is required
-  homeuser = "/home/jhondoe", # Optional, defaults to /home/$user
+  homeuser => "/home/jhondoe", # Optional, defaults to /home/$user
 } 
 ```
 Remember that a gemset is usually used to switch to a ruby
